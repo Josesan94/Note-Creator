@@ -4,15 +4,15 @@ import { Badge, Box, Button, HStack, Stack, Text } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 
-type Props = {}
+type NoteProps = {
+  onDelete: (id:string) => void;
+} 
 
-const Note = (props: Props) => {
+const Note = ({onDelete}:NoteProps) => {
 
   
 
     const note = useNote()
-
-    console.log(note.id)
 
   return (
     <>
@@ -37,7 +37,7 @@ const Note = (props: Props) => {
         <Link to={`/${note.id}/edit`}>
             <Button background="teal.500">Edit</Button>
         </Link>
-        <Button colorScheme='red' variant='outline'>Delete</Button>
+        <Button colorScheme='red' variant='outline' onClick={() => onDelete(note.id)}>Delete</Button>
         <Link to="/">
         <Button colorScheme='teal' variant='link'>
           Back

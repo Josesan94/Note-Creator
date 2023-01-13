@@ -1,6 +1,6 @@
 
 import React, { useMemo } from 'react';
-import {Routes, Route, Navigate} from 'react-router-dom' 
+import {Routes, Route, Navigate, useNavigate} from 'react-router-dom' 
 import {Container} from '@chakra-ui/react'
 import NewNote from './NewNote';
 import NoteList from './NoteList';
@@ -42,6 +42,7 @@ function App() {
 
   const [notes, setNotes] = useLocalStorage<RawNote[]>("NOTES", [])
   const [tags, setTags] = useLocalStorage<Tag[]>("TAGS", [])
+  const navigate = useNavigate()
 
   const notesWithTags = useMemo(() => {
     return notes?.map((note) => {
@@ -67,6 +68,15 @@ function App() {
     })
   }
 
+  const onDeleteNote = (id:string) => {
+    setNotes( prevNotes => {
+      return prevNotes.filter(note => note.id !== id )
+    }
+
+    )
+    navigate("/")
+  }
+
 
   const addTag = (tag:Tag) => {
     setTags(prev => [...prev, tag])
@@ -78,7 +88,7 @@ function App() {
     <Routes >
       <Route path="/" element={<NoteList notes={notesWithTags} availableTags={tags}/>}/> 
       <Route path="/:id" element={<NoteLayout notes={notesWithTags}/>}>
-        <Route index element={<Note/>} />
+        <Route index element={<Note onDelete={onDeleteNote}/>} />
         <Route path="edit" element={<EditNote onSubmit={onUpdateNote} onAddTag={addTag} availableTags={tags}/>}/>
       </Route>
       <Route path="*" element={<Navigate to="/"/>}/>
