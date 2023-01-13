@@ -20,17 +20,18 @@ type NoteFormProps = {
   onSubmit: (data:NoteData) => void;
   onAddTag:(tag:Tag) => void;
   availableTags: Tag[];
-}
+} & Partial <NoteData>
 
 
 
-const NoteForm = ({onSubmit,onAddTag, availableTags}:NoteFormProps) => {
+const NoteForm = ({onSubmit,onAddTag, availableTags, title= "", markdown = "", tags = []}:NoteFormProps) => {
 
   const titleRef = useRef<HTMLInputElement>(null)
   const textareaRef = useRef<HTMLInputElement>(null)
+  console.log(title)
 
 
-  const [selectedTags, setSelectedTags] = useState<Tag[]>([])
+  const [selectedTags, setSelectedTags] = useState<Tag[]>(tags)
   
 
   const navigate = useNavigate()
@@ -69,7 +70,7 @@ const NoteForm = ({onSubmit,onAddTag, availableTags}:NoteFormProps) => {
     <>
       <Stack marginY={5} >
         <Formik
-          initialValues={{ title: "", markdown:"",  tags: [] }}
+          initialValues={{ title: title, markdown:markdown,  tags: [] }}
           onSubmit={(values, action) => {
             handleSubmit(values)
             action.setSubmitting(false)
@@ -82,13 +83,13 @@ const NoteForm = ({onSubmit,onAddTag, availableTags}:NoteFormProps) => {
               <Field   name="title" validate={validateTitle}>
                 {({ field, form }: any) => (
                   
-                  <FormControl
+                  <FormControl      
                     isRequired
                     isInvalid={form.errors.title && form.touched.title}
                     ref={titleRef}
                   >
                     <FormLabel>Title</FormLabel>
-                    <Input {...field} placeholder="hola" />
+                    <Input {...field} placeholder="hola"  />
                     <FormErrorMessage>{form.errors.title}</FormErrorMessage>
                   </FormControl>
                 )}
@@ -137,6 +138,7 @@ const NoteForm = ({onSubmit,onAddTag, availableTags}:NoteFormProps) => {
               <Field name="markdown" >
                 {({ field, form }: any) => (
                   <FormControl
+                    defaultValue={markdown}
                     isRequired
                     isInvalid={form.errors.markdown && form.touched.markdown}
                     ref={textareaRef}

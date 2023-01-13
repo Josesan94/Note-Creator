@@ -18,7 +18,14 @@ const EditNote = (props: EditNoteProps) => {
   return (
     <>
     <Text fontSize="2xl">Edit Note</Text>
-    <NoteForm onSubmit={data => onSubmit(note.id, data)} onAddTag={onAddTag} availableTags={availableTags}/>
+    <NoteForm
+      title={note.title}
+      markdown={note.markdown}
+      tags={note.tags} 
+      onSubmit={data => onSubmit(note.id, data)} 
+      onAddTag={onAddTag} 
+      availableTags={availableTags}
+    />
     </>
   )
 }
